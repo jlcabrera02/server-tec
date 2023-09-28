@@ -2,13 +2,14 @@ import sequelize from '@config/db.config';
 import Banners from './Banners.model';
 import Blogs from './Blogs.model';
 import Imagenes from './Imagenes.model';
-import ImagenesAndBlogs from './ImagenesAndBlogs.model';
+
+Imagenes.belongsTo(Blogs, { foreignKey: 'idblog', onDelete: 'cascade' });
+Blogs.hasMany(Imagenes, { foreignKey: 'idblog' });
 
 export default {
   Banners,
   Blogs,
-  Imagenes,
-  ImagenesAndBlogs
+  Imagenes
 };
 
 export const createTables = () => {

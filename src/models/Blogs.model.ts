@@ -11,9 +11,10 @@ const Blogs = sequelize.define('Blogs', {
     type: DataTypes.TEXT,
     allowNull: false
   },
-  autorizado: {
-    type: DataTypes.BOOLEAN,
-    allowNull: true
+  estatus: {
+    type: DataTypes.ENUM('aceptado', 'rechazado', 'pendiente'),
+    allowNull: false,
+    defaultValue: 'pendiente'
   },
   imagen: {
     type: DataTypes.STRING,
@@ -22,6 +23,10 @@ const Blogs = sequelize.define('Blogs', {
   usuario: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  fechavigente: {
+    type: DataTypes.DATE,
+    allowNull: false
   }
 });
 
