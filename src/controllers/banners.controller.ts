@@ -75,14 +75,6 @@ controller.actualizarBanner = async (req, res) => {
         msg: 'No se encontro el elemento en la base de datos.'
       };
 
-    fs.unlinkSync(
-      path.join(
-        __dirname,
-        '../public/media/imagenes',
-        imagenAnterior.dataValues.imagen.replace('/api/bannersimagenes/', '')
-      )
-    );
-
     const imagenBase64 = req.body.imagen;
     const buffer = Buffer.from(
       imagenBase64.replace(/data:image\/\w*;base64/, ''),
@@ -101,10 +93,17 @@ controller.actualizarBanner = async (req, res) => {
     );
 
     const response = await editarBanner({
-      cuerpo: req.body,
+      cuerpo: { ...req.body, imagen: `/api/bannersimagenesnombre/${nombre}` },
       idBanner: req.params.idbanner
     });
 
+    fs.unlinkSync(
+      path.join(
+        __dirname,
+        '../public/media/imagenes',
+        imagenAnterior.dataValues.imagen.replace('/api/bannersimagenes/', '')
+      )
+    );
     res.status(200).json({ success: true, response });
   } catch (err) {
     res.status(400).json({
@@ -125,6 +124,10 @@ controller.eliminarBanner = async (req, res) => {
         msg: 'No se encontro el elemento en la base de datos.'
       };
 
+    const response = await eliminarBanner({
+      idBanner: req.params.idbanner
+    });
+
     fs.unlinkSync(
       path.join(
         __dirname,
@@ -132,10 +135,6 @@ controller.eliminarBanner = async (req, res) => {
         imagenAnterior.dataValues.imagen.replace('/api/bannersimagenes/', '')
       )
     );
-
-    const response = await eliminarBanner({
-      idBanner: req.params.idbanner
-    });
 
     res.status(200).json({ success: true, response });
   } catch (err) {
