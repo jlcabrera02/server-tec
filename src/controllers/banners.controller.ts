@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import {
   crearBanner,
   obtenerBanners,
@@ -7,8 +5,9 @@ import {
   eliminarBanner,
   editarVigencia
 } from '@services/Banners.services';
-import generadornombre from 'src/utils/generadornombre';
 import models from '@models/index';
+import guardarImagen from 'src/utils/guardarImagen';
+import eliminarImagen from 'src/utils/eliminarImagen';
 
 const controller = {
   crearBanner: null,
@@ -21,22 +20,9 @@ const controller = {
 
 controller.crearBanner = async (req, res) => {
   try {
-    const imagenBase64 = req.body.imagen;
-    const buffer = Buffer.from(
-      imagenBase64.replace(/data:image\/\w*;base64/, ''),
-      'base64'
-    );
-    const extencionArchivo = imagenBase64.substring(
-      'data:image/'.length,
-      imagenBase64.indexOf(';base64')
-    );
+    const { imagen } = req.files;
 
-    const nombre = 'banner' + generadornombre() + '.' + extencionArchivo;
-
-    fs.writeFileSync(
-      path.join(__dirname, '../public/media/imagenes/', nombre),
-      buffer
-    );
+    const nombre = await guardarImagen({ imagen, nomenclatura: 'banner' });
 
     const response = await crearBanner({
       cuerpo: { imagen: `/api/bannersimagenes/${nombre}` }
@@ -67,6 +53,8 @@ controller.obtenerBanners = async (req, res) => {
 
 controller.actualizarBanner = async (req, res) => {
   try {
+    const { imagen } = req.files;
+
     const imagenAnterior = await models.Banners.findByPk(req.params.idbanner);
     if (!imagenAnterior)
       throw {
@@ -75,36 +63,18 @@ controller.actualizarBanner = async (req, res) => {
         msg: 'No se encontro el elemento en la base de datos.'
       };
 
-    const imagenBase64 = req.body.imagen;
-    const buffer = Buffer.from(
-      imagenBase64.replace(/data:image\/\w*;base64/, ''),
-      'base64'
-    );
-    const extencionArchivo = imagenBase64.substring(
-      'data:image/'.length,
-      imagenBase64.indexOf(';base64')
-    );
-
-    const nombre = 'banner' + generadornombre() + '.' + extencionArchivo;
-
-    fs.writeFileSync(
-      path.join(__dirname, '../public/media/imagenes/', nombre),
-      buffer
-    );
+    const nombre = await guardarImagen({ imagen, nomenclatura: 'banner' });
 
     const response = await editarBanner({
-      cuerpo: { ...req.body, imagen: `/api/bannersimagenesnombre/${nombre}` },
+      cuerpo: { ...req.body, imagen: `/api/bannersimagenes/${nombre}` },
       idBanner: req.params.idbanner
     });
 
-    fs.unlinkSync(
-      path.join(
-        __dirname,
-        '../public/media/imagenes',
-        imagenAnterior.dataValues.imagen.replace('/api/bannersimagenes/', '')
-      )
+    const removeImagePrevious = eliminarImagen(
+      imagenAnterior.dataValues.imagen.replace('/api/bannersimagenes/', '')
     );
-    res.status(200).json({ success: true, response });
+
+    res.status(200).json({ success: true, response, removeImagePrevious });
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -117,6 +87,7 @@ controller.actualizarBanner = async (req, res) => {
 controller.eliminarBanner = async (req, res) => {
   try {
     const imagenAnterior = await models.Banners.findByPk(req.params.idbanner);
+
     if (!imagenAnterior)
       throw {
         success: false,
@@ -128,20 +99,16 @@ controller.eliminarBanner = async (req, res) => {
       idBanner: req.params.idbanner
     });
 
-    fs.unlinkSync(
-      path.join(
-        __dirname,
-        '../public/media/imagenes',
-        imagenAnterior.dataValues.imagen.replace('/api/bannersimagenes/', '')
-      )
+    const removeImagePrevious = eliminarImagen(
+      imagenAnterior.dataValues.imagen.replace('/api/bannersimagenes/', '')
     );
 
-    res.status(200).json({ success: true, response });
+    res.status(200).json({ success: true, response, removeImagePrevious });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.code || 400).json({
       success: false,
       response: err,
-      msg: 'Error al actualizar el banner'
+      msg: 'Error al eliminar el banner'
     });
   }
 };
@@ -162,27 +129,6 @@ controller.vigenciaBanner = async (req, res) => {
       msg: 'Error al actualizar el banner'
     });
   }
-};
-
-controller.obtenerImagenesBanners = (req, res) => {
-  const nombreImagen = req.params.imagen;
-
-  const rutaImagen = path.join(
-    __dirname,
-    '../public/media/imagenes/',
-    nombreImagen
-  );
-
-  // Utiliza fs para leer la imagen del volumen y enviarla como respuesta
-  fs.readFile(rutaImagen, (err, data) => {
-    if (err) {
-      res.status(404).send('Imagen no encontrada');
-    } else {
-      // Establece el encabezado Content-Type adecuado (p. ej., image/jpeg)
-      res.contentType(`image/${nombreImagen.split('.')[1]}`);
-      res.send(data);
-    }
-  });
 };
 
 export default controller;

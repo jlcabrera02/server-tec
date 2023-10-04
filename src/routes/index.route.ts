@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import banners from '@routes/banners.route';
 import blogs from '@routes/blogs.route';
-import bannerController from '@controllers/banners.controller';
+import getImage from '@utils/obtenerImagenes';
 
 const router = Router();
 
 router.use('/banners', banners);
 router.use('/blogs', blogs);
 
-router.get('/bannersimagenes/:imagen', bannerController.obtenerImagenesBanners);
-router.get('/blogsimagenes/:imagen', bannerController.obtenerImagenesBanners);
+//Get Images
+router.get('/bannersimagenes/:imagen', getImage);
+router.get('/blogsimagenes/:imagen', getImage);
 
 export default router;
