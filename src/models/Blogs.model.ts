@@ -7,7 +7,11 @@ const Blogs = sequelize.define('Blogs', {
     primaryKey: true,
     autoIncrement: true
   },
-  content: {
+  titulo: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  contenido: {
     type: DataTypes.TEXT,
     allowNull: false
   },
@@ -16,14 +20,8 @@ const Blogs = sequelize.define('Blogs', {
     allowNull: false,
     defaultValue: 'pendiente'
   },
-  imagen: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  usuario: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
+  imagen: { type: DataTypes.STRING, allowNull: false },
+  usuario: { type: DataTypes.STRING, allowNull: true },
   fechavigente: {
     type: DataTypes.DATE,
     allowNull: false

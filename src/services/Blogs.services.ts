@@ -1,10 +1,11 @@
 import sequelize from '@config/db.config';
 import models from '@models/index';
 import { Op } from 'sequelize';
-const { Blogs, Imagenes } = models;
+const { Blogs, Imagenes, Etiquetas, EtiquetasBlogs } = models;
 
 type cuerpo = {
   contenido: string;
+  titulo: string;
   imagenPrincipal: string;
   imagenes: string[];
   fechaVigente: string;
@@ -21,9 +22,10 @@ export const crearBlog = async ({ cuerpo }: { cuerpo: cuerpo }) => {
     const transition = sequelize.transaction(async (t) => {
       const crearBlog = await Blogs.create(
         {
-          content: cuerpo.contenido,
+          contenido: cuerpo.contenido,
           imagen: cuerpo.imagenPrincipal,
-          fechavigente: cuerpo.fechaVigente
+          fechavigente: cuerpo.fechaVigente,
+          titulo: cuerpo.titulo
         },
         { transaction: t }
       );
@@ -61,6 +63,7 @@ export const obtenerBlogs = async ({ query }: { query: query }) => {
     const obtenerBlogs = await Blogs.findAll({
       where: filtros,
       limit: query.limit ? Number(query.limit) : null,
+      include: Etiquetas,
       order: [['updatedAt', 'DESC']]
     });
 
@@ -72,7 +75,9 @@ export const obtenerBlogs = async ({ query }: { query: query }) => {
 
 export const obtenerBlog = async ({ idBlog }: { idBlog: number }) => {
   try {
-    const obtenerBlog = await Blogs.findByPk(idBlog, { include: Imagenes });
+    const obtenerBlog = await Blogs.findByPk(idBlog, {
+      include: [{ model: Imagenes }, { model: Etiquetas }]
+    });
     if (!obtenerBlog) throw { success: false, msg: 'No existe el elemento' };
     return obtenerBlog;
   } catch (err) {
@@ -86,14 +91,15 @@ export const editarBlogTexto = async ({
 }: {
   idBlog: number;
   cuerpo: Omit<cuerpo, 'imagenPrincipal' | 'imagenes' | 'contenido'> & {
-    content: string;
+    contenido: string;
   };
 }) => {
   try {
     const editarBlogs = await Blogs.update(
       {
-        content: cuerpo.content,
-        fechavigente: cuerpo.fechaVigente
+        contenido: cuerpo.contenido,
+        fechavigente: cuerpo.fechaVigente,
+        titulo: cuerpo.titulo
       },
       { where: { idblog: idBlog } }
     );
@@ -176,6 +182,37 @@ export const editarImagenes = async ({
       { where: { idimagen: idImagen } }
     );
     return editarImagen;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const editarEtiquetas = async ({
+  idblog,
+  etiquetas
+}: {
+  idblog: number;
+  etiquetas: number[];
+}) => {
+  try {
+    const crear = sequelize.transaction(async (t) => {
+      await EtiquetasBlogs.destroy({
+        where: { BlogIdblog: idblog },
+        transaction: t
+      });
+
+      const etiquetasCreate = await EtiquetasBlogs.bulkCreate(
+        etiquetas.map((idEtiqueta: number) => ({
+          BlogIdblog: Number(idblog),
+          EtiquetaIdetiqueta: idEtiqueta
+        })),
+        { transaction: t }
+      );
+
+      return etiquetasCreate;
+    });
+
+    return crear;
   } catch (err) {
     throw err;
   }

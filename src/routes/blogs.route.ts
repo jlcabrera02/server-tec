@@ -16,6 +16,7 @@ router.put(
   blogs.editarImagenPrincipal
 );
 router.put('/actualizarxidblog/:idblog', blogs.editarBlogTexto);
+router.put('/actualizaretiquetasxidblog/:idblog', blogs.editarEtiquetas);
 
 router.delete('/eliminarimagenxidimagen/:idimagen', blogs.eliminarImagen);
 router.delete('/eliminarxidblog/:idblog', blogs.eliminarBlog);

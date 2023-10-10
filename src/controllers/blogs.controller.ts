@@ -9,45 +9,61 @@ import {
   eliminarBlog,
   nuevaImagen,
   editarImagenBlogPrincipal,
-  modificarEstatusBlog
+  modificarEstatusBlog,
+  editarEtiquetas
 } from '@services/Blogs.services';
+import guardarImagen from '@utils/guardarImagen';
 import subirImagen, { eliminarImagen } from 'src/utils/subirImagen';
+import eliminarImg from '@utils/eliminarImagen';
 const controller = {
   crearBlog: null, //
   obtenerBlog: null, //
   obtenerBlogs: null, //
   editarBlogTexto: null, //
   eliminarBlog: null, //
+  modificarEstatus: null, //
+  //Editar las imagenes de los blogs
   nuevaImagen: null, //
   editarImagenes: null, //
+  editarEtiquetas: null, //
   eliminarImagen: null, //
-  editarImagenPrincipal: null, //
-  modificarEstatus: null //
+  editarImagenPrincipal: null //
 };
 
 controller.crearBlog = async (req, res) => {
   try {
-    const imagenesBase64: string[] = req.body.imagenes;
+    const { imagenPrincipal, imagenes } = req.files;
+    const { contenido, titulo, fechaVigente } = JSON.parse(req.body.contenido);
     const imagenesUrl = [];
 
-    imagenesBase64.map((imagenBase64) => {
-      const info = subirImagen({ imagenBase64, nomenclatura: 'blogs' });
-      imagenesUrl.push(`/api/blogsimagenes/${info.getNombre()}`);
+    const imagenP = await guardarImagen({
+      imagen: imagenPrincipal,
+      nomenclatura: 'blogs'
     });
 
-    const infoImagenPrincipal = subirImagen({
-      imagenBase64: req.body.imagenPrincipal,
-      nomenclatura: 'blogsmainimagen'
-    });
-
-    const imagenPrincipal = `/api/blogsimagenes/${infoImagenPrincipal.getNombre()}`;
+    if (Array.isArray(imagenes)) {
+      imagenes.forEach(async (img) => {
+        const imagen = await guardarImagen({
+          imagen: img,
+          nomenclatura: 'blogs'
+        });
+        imagenesUrl.push(`/api/blogsimagenes/${imagen}`);
+      });
+    } else {
+      const imagen = await guardarImagen({
+        imagen: imagenes,
+        nomenclatura: 'blogs'
+      });
+      imagenesUrl.push(`/api/blogsimagenes/${imagen}`);
+    }
 
     const response = await crearBlog({
       cuerpo: {
-        contenido: req.body.content,
-        imagenPrincipal,
+        contenido,
+        imagenPrincipal: `/api/blogsimagenes/${imagenP}`,
         imagenes: imagenesUrl,
-        fechaVigente: req.body.fechaVigente
+        fechaVigente,
+        titulo
       }
     });
 
@@ -110,14 +126,13 @@ controller.editarBlogTexto = async (req, res) => {
 
 controller.nuevaImagen = async (req, res) => {
   try {
-    const ruta = subirImagen({
-      imagenBase64: req.body.imagen,
-      nomenclatura: 'blogs'
-    });
+    const { imagen } = req.files;
+
+    const nombre = await guardarImagen({ imagen, nomenclatura: 'blogs' });
 
     const response = await nuevaImagen({
       idBlog: req.params.idblog,
-      imagen: `/api/blogsimagenes/${ruta.getNombre()}`
+      imagen: `/api/blogsimagenes/${nombre}`
     });
 
     res.status(200).json({ success: true, response });
@@ -132,6 +147,7 @@ controller.nuevaImagen = async (req, res) => {
 
 controller.editarImagenPrincipal = async (req, res) => {
   try {
+    const { imagen } = req.files;
     const imagenAnterior = await models.Blogs.findByPk(req.params.idblog);
 
     if (!imagenAnterior) {
@@ -142,22 +158,23 @@ controller.editarImagenPrincipal = async (req, res) => {
       };
     }
 
-    eliminarImagen({
-      pathImagen: imagenAnterior.dataValues.imagen,
-      nomenclatura: 'blogsimagenes'
+    const nombreImg = await guardarImagen({
+      imagen,
+      nomenclatura: 'blogs'
     });
 
-    const ruta = subirImagen({
-      imagenBase64: req.body.imagen,
-      nomenclatura: 'blogsmainimagen'
-    });
+    const removeImg = eliminarImg(
+      imagenAnterior.dataValues.imagen.replace('/api/blogsimagenes/', '')
+    );
 
     const response = await editarImagenBlogPrincipal({
       idBlog: req.params.idblog,
-      imagen: `/api/blogsimagenes/${ruta.getNombre()}`
+      imagen: `/api/blogsimagenes/${nombreImg}`
     });
 
-    res.status(200).json({ success: true, response });
+    res
+      .status(200)
+      .json({ success: true, response, removeImagePrevious: removeImg });
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -169,6 +186,7 @@ controller.editarImagenPrincipal = async (req, res) => {
 
 controller.editarImagenes = async (req, res) => {
   try {
+    const { imagen } = req.files;
     const imagenAnterior = await models.Imagenes.findByPk(req.params.idimagen);
 
     if (!imagenAnterior) {
@@ -179,22 +197,23 @@ controller.editarImagenes = async (req, res) => {
       };
     }
 
-    eliminarImagen({
-      pathImagen: imagenAnterior.dataValues.imagen,
-      nomenclatura: 'blogsimagenes'
-    });
-
-    const ruta = subirImagen({
-      imagenBase64: req.body.imagen,
+    const nombreImg = await guardarImagen({
+      imagen,
       nomenclatura: 'blogs'
     });
 
+    const removeImg = eliminarImg(
+      imagenAnterior.dataValues.imagen.replace('/api/blogsimagenes/', '')
+    );
+
     const response = await editarImagenes({
       idImagen: req.params.idimagen,
-      imagen: `/api/blogsimagenes/${ruta.getNombre()}`
+      imagen: `/api/blogsimagenes/${nombreImg}`
     });
 
-    res.status(200).json({ success: true, response });
+    res
+      .status(200)
+      .json({ success: true, response, removeImagePrevious: removeImg });
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -216,14 +235,15 @@ controller.eliminarImagen = async (req, res) => {
       };
     }
 
-    eliminarImagen({
-      pathImagen: imagenAnterior.dataValues.imagen,
-      nomenclatura: 'blogsimagenes'
+    const removeImg = eliminarImg(
+      imagenAnterior.dataValues.imagen.replace('/api/blogsimagenes/', '')
+    );
+
+    const response = await eliminarImagenes({
+      idImagen: Number(req.params.idimagen)
     });
 
-    const response = await eliminarImagenes({ idImagen: req.params.idimagen });
-
-    res.status(200).json({ success: true, response });
+    res.status(200).json({ success: true, response, removeImg });
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -248,21 +268,18 @@ controller.eliminarBlog = async (req, res) => {
         msg: 'No se encontro el elemento en la base de datos.'
       };
     }
-    imagenesAnteriores.forEach((el) => {
-      eliminarImagen({
-        pathImagen: el.dataValues.imagen,
-        nomenclatura: 'blogsimagenes'
-      });
+
+    imagenesAnteriores.forEach((img) => {
+      eliminarImg(img.dataValues.imagen.replace('/api/blogsimagenes/', ''));
     });
 
-    eliminarImagen({
-      pathImagen: imagenAnterior.dataValues.imagen,
-      nomenclatura: 'blogsimagenes'
-    });
+    const removeImg = eliminarImg(
+      imagenAnterior.dataValues.imagen.replace('/api/blogsimagenes/', '')
+    );
 
     const response = await eliminarBlog({ idBlog: req.params.idblog });
 
-    res.status(200).json({ success: true, response });
+    res.status(200).json({ success: true, response, removeImg });
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -285,6 +302,27 @@ controller.modificarEstatus = async (req, res) => {
       success: false,
       response: err,
       msg: 'Error al modificar el estatus al blog'
+    });
+  }
+};
+
+controller.editarEtiquetas = async (req, res) => {
+  try {
+    const { idsEtiquetas } = req.body;
+
+    const response = await editarEtiquetas({
+      idblog: req.params.idblog,
+      etiquetas: idsEtiquetas
+    });
+
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    console.log(err);
+
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al agregar etiquetas'
     });
   }
 };
