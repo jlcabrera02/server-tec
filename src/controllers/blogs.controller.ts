@@ -32,7 +32,9 @@ const controller = {
 controller.crearBlog = async (req, res) => {
   try {
     const { imagenPrincipal } = req.files;
-    const { contenido, titulo, fechaVigente } = JSON.parse(req.body.contenido);
+    const { contenido, titulo, fechaVigente, fecha } = JSON.parse(
+      req.body.contenido
+    );
 
     const imagenP = await guardarImagen({
       imagen: imagenPrincipal,
@@ -44,6 +46,7 @@ controller.crearBlog = async (req, res) => {
         contenido,
         imagenPrincipal: `/api/blogsimagenes/${imagenP}`,
         fechaVigente,
+        fecha,
         titulo
       }
     });

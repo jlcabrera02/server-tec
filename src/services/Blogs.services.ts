@@ -6,6 +6,7 @@ const { Blogs, Imagenes, Etiquetas, EtiquetasBlogs } = models;
 type cuerpo = {
   contenido: string;
   titulo: string;
+  fecha: string;
   imagenPrincipal: string;
   fechaVigente: string;
 };
@@ -22,6 +23,7 @@ export const crearBlog = async ({ cuerpo }: { cuerpo: cuerpo }) => {
       contenido: cuerpo.contenido,
       imagen: cuerpo.imagenPrincipal,
       fechavigente: cuerpo.fechaVigente,
+      fecha: cuerpo.fecha,
       titulo: cuerpo.titulo
     });
 
@@ -75,16 +77,15 @@ export const editarBlogTexto = async ({
   cuerpo
 }: {
   idBlog: number;
-  cuerpo: Omit<cuerpo, 'imagenPrincipal' | 'imagenes' | 'contenido'> & {
-    contenido: string;
-  };
+  cuerpo: Omit<cuerpo, 'imagenPrincipal' | 'imagenes'>;
 }) => {
   try {
     const editarBlogs = await Blogs.update(
       {
         contenido: cuerpo.contenido,
         fechavigente: cuerpo.fechaVigente,
-        titulo: cuerpo.titulo
+        titulo: cuerpo.titulo,
+        fecha: cuerpo.fecha
       },
       { where: { idblog: idBlog } }
     );
