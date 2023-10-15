@@ -1,7 +1,7 @@
 import sequelize from '@config/db.config';
 import { DataTypes } from 'sequelize';
 
-const Imagenes = sequelize.define('imagenes_blogs', {
+const Imagenes = sequelize.define('imagenes', {
   idimagen: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -9,10 +9,6 @@ const Imagenes = sequelize.define('imagenes_blogs', {
   },
   imagen: {
     type: DataTypes.STRING,
-    allowNull: false
-  },
-  idblog: {
-    type: DataTypes.INTEGER,
     allowNull: false
   }
 });

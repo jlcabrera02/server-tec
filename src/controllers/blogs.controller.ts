@@ -13,7 +13,6 @@ import {
   editarEtiquetas
 } from '@services/Blogs.services';
 import guardarImagen from '@utils/guardarImagen';
-import subirImagen, { eliminarImagen } from 'src/utils/subirImagen';
 import eliminarImg from '@utils/eliminarImagen';
 const controller = {
   crearBlog: null, //
@@ -32,36 +31,18 @@ const controller = {
 
 controller.crearBlog = async (req, res) => {
   try {
-    const { imagenPrincipal, imagenes } = req.files;
+    const { imagenPrincipal } = req.files;
     const { contenido, titulo, fechaVigente } = JSON.parse(req.body.contenido);
-    const imagenesUrl = [];
 
     const imagenP = await guardarImagen({
       imagen: imagenPrincipal,
       nomenclatura: 'blogs'
     });
 
-    if (Array.isArray(imagenes)) {
-      imagenes.forEach(async (img) => {
-        const imagen = await guardarImagen({
-          imagen: img,
-          nomenclatura: 'blogs'
-        });
-        imagenesUrl.push(`/api/blogsimagenes/${imagen}`);
-      });
-    } else {
-      const imagen = await guardarImagen({
-        imagen: imagenes,
-        nomenclatura: 'blogs'
-      });
-      imagenesUrl.push(`/api/blogsimagenes/${imagen}`);
-    }
-
     const response = await crearBlog({
       cuerpo: {
         contenido,
         imagenPrincipal: `/api/blogsimagenes/${imagenP}`,
-        imagenes: imagenesUrl,
         fechaVigente,
         titulo
       }
@@ -131,7 +112,6 @@ controller.nuevaImagen = async (req, res) => {
     const nombre = await guardarImagen({ imagen, nomenclatura: 'blogs' });
 
     const response = await nuevaImagen({
-      idBlog: req.params.idblog,
       imagen: `/api/blogsimagenes/${nombre}`
     });
 
@@ -257,10 +237,6 @@ controller.eliminarBlog = async (req, res) => {
   try {
     const imagenAnterior = await models.Blogs.findByPk(req.params.idblog);
 
-    const imagenesAnteriores = await models.Imagenes.findAll({
-      where: { idblog: req.params.idblog }
-    });
-
     if (!imagenAnterior) {
       throw {
         success: false,
@@ -268,10 +244,6 @@ controller.eliminarBlog = async (req, res) => {
         msg: 'No se encontro el elemento en la base de datos.'
       };
     }
-
-    imagenesAnteriores.forEach((img) => {
-      eliminarImg(img.dataValues.imagen.replace('/api/blogsimagenes/', ''));
-    });
 
     const removeImg = eliminarImg(
       imagenAnterior.dataValues.imagen.replace('/api/blogsimagenes/', '')

@@ -7,7 +7,6 @@ type cuerpo = {
   contenido: string;
   titulo: string;
   imagenPrincipal: string;
-  imagenes: string[];
   fechaVigente: string;
 };
 
@@ -19,28 +18,14 @@ type query = {
 
 export const crearBlog = async ({ cuerpo }: { cuerpo: cuerpo }) => {
   try {
-    const transition = sequelize.transaction(async (t) => {
-      const crearBlog = await Blogs.create(
-        {
-          contenido: cuerpo.contenido,
-          imagen: cuerpo.imagenPrincipal,
-          fechavigente: cuerpo.fechaVigente,
-          titulo: cuerpo.titulo
-        },
-        { transaction: t }
-      );
-
-      const crearImagenes = await Imagenes.bulkCreate(
-        cuerpo.imagenes.map((imagen) => ({
-          imagen,
-          idblog: crearBlog.dataValues.idblog
-        })),
-        { transaction: t }
-      );
-
-      return { crearBlog, crearImagenes };
+    const crearBlog = await Blogs.create({
+      contenido: cuerpo.contenido,
+      imagen: cuerpo.imagenPrincipal,
+      fechavigente: cuerpo.fechaVigente,
+      titulo: cuerpo.titulo
     });
-    return transition;
+
+    return crearBlog;
   } catch (err) {
     throw err;
   }
@@ -76,7 +61,7 @@ export const obtenerBlogs = async ({ query }: { query: query }) => {
 export const obtenerBlog = async ({ idBlog }: { idBlog: number }) => {
   try {
     const obtenerBlog = await Blogs.findByPk(idBlog, {
-      include: [{ model: Imagenes }, { model: Etiquetas }]
+      include: [{ model: Etiquetas }]
     });
     if (!obtenerBlog) throw { success: false, msg: 'No existe el elemento' };
     return obtenerBlog;
@@ -129,17 +114,10 @@ export const editarImagenPrincipal = async ({
   }
 };
 
-export const nuevaImagen = async ({
-  imagen,
-  idBlog
-}: {
-  imagen: string;
-  idBlog: number;
-}) => {
+export const nuevaImagen = async ({ imagen }: { imagen: string }) => {
   try {
     const editarImagen = await Imagenes.create({
-      imagen: imagen,
-      idblog: idBlog
+      imagen: imagen
     });
     return editarImagen;
   } catch (err) {

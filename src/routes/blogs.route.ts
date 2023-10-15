@@ -7,7 +7,7 @@ router.get('/obtenerxidblog/:idblog', blogs.obtenerBlog);
 router.get('/obtener', blogs.obtenerBlogs);
 
 router.post('/crear', blogs.crearBlog);
-router.post('/nuevaimagenxidblog/:idblog', blogs.nuevaImagen);
+router.post('/nuevaimagen', blogs.nuevaImagen);
 
 router.put('/cambiarestatusxidblog/:idblog', blogs.modificarEstatus);
 router.put('/editarimagenxidimagen/:idimagen', blogs.editarImagenes);
