@@ -4,6 +4,7 @@ import Blogs from './Blogs.model';
 import Imagenes from './Imagenes.model';
 import Etiquetas from './Etiquetas.model';
 import EtiquetasBlogs from './Etiquetas_Blogs.model';
+import Convocatorias from './Convocatorias.model';
 
 Blogs.belongsToMany(Etiquetas, { through: EtiquetasBlogs });
 Etiquetas.belongsToMany(Blogs, { through: EtiquetasBlogs });
@@ -13,7 +14,8 @@ export default {
   Blogs,
   Etiquetas,
   Imagenes,
-  EtiquetasBlogs
+  EtiquetasBlogs,
+  Convocatorias
 };
 
 export const createTables = () => {
