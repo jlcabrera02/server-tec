@@ -13,4 +13,9 @@ const sequelize = new Sequelize(
   }
 );
 
+sequelize
+  .authenticate()
+  .then((ss) => console.log('conectado', ss))
+  .catch((err) => console.log(err));
+
 export default sequelize;

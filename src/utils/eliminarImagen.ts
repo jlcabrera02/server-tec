@@ -10,4 +10,13 @@ const eliminarImagen = (pathImagen: string) => {
   }
 };
 
+export const eliminarArchivo = (pathImagen: string) => {
+  try {
+    fs.unlinkSync(path.join(__dirname, '../public/media/archivos', pathImagen));
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 export default eliminarImagen;

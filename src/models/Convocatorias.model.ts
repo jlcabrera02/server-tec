@@ -7,7 +7,7 @@ const Convocatoria = sequelize.define('Convocatoria', {
     primaryKey: true,
     autoIncrement: true
   },
-  decripcion: {
+  descripcion: {
     type: DataTypes.TEXT,
     allowNull: true
   },
@@ -24,7 +24,7 @@ const Convocatoria = sequelize.define('Convocatoria', {
     allowNull: false
   },
   pdf: {
-    type: DataTypes.BOOLEAN,
+    type: DataTypes.STRING,
     allowNull: false
   }
 });

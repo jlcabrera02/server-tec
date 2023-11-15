@@ -31,4 +31,28 @@ const guardarImagen = ({ imagen, nomenclatura }) => {
   });
 };
 
+export const guardarArchivos = ({ archivo, nomenclatura }) => {
+  return new Promise((resolve, reject) => {
+    const nombre =
+      nomenclatura +
+      generadornombre() +
+      '.' +
+      archivo.mimetype.replace('application/', '');
+
+    archivo.mv(
+      path.join(__dirname, '../public/media/archivos/', nombre),
+      (err) => {
+        if (err) {
+          return reject({
+            success: false,
+            code: 400,
+            msg: 'Error al guardar el documento'
+          });
+        }
+        return resolve(nombre);
+      }
+    );
+  });
+};
+
 export default guardarImagen;

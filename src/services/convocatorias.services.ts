@@ -3,6 +3,7 @@ const { Convocatorias } = models;
 
 type cuerpo = {
   titulo: string;
+  fecha: string;
   descripcion?: string;
   imagen: string;
   pdf: string;
@@ -10,12 +11,8 @@ type cuerpo = {
 
 type orderConvocatoria = 'idconvocatoria' | 'fecha';
 
-export const obtener = async ({
-  cuerpo,
-  query
-}: {
-  cuerpo: cuerpo;
-  query: { order?: orderConvocatoria };
+export const obtenerConvocatorias = async (query: {
+  order?: orderConvocatoria;
 }) => {
   try {
     const convocatorias = await Convocatorias.findAll({
@@ -51,7 +48,7 @@ export const actualizarDatos = async (
 };
 
 export const actualizarPDF = async (
-  cuerpo: Omit<cuerpo, 'imagen' | 'descripcion' | 'titulo'> & {
+  cuerpo: Omit<cuerpo, 'imagen' | 'descripcion' | 'titulo' | 'fecha'> & {
     idconvocatoria: number;
   }
 ) => {
@@ -67,7 +64,7 @@ export const actualizarPDF = async (
 };
 
 export const actualizarImg = async (
-  cuerpo: Omit<cuerpo, 'pdf' | 'descripcion' | 'titulo'> & {
+  cuerpo: Omit<cuerpo, 'pdf' | 'descripcion' | 'titulo' | 'fecha'> & {
     idconvocatoria: number;
   }
 ) => {
