@@ -15,6 +15,8 @@ type query = {
   estatus: 'aceptado' | 'rechazado' | 'pendiente';
   mostrarSinVigencia: string;
   limit: number;
+  offset: number;
+  etiqueta: string;
 };
 
 export const crearBlog = async ({ cuerpo }: { cuerpo: cuerpo }) => {
@@ -35,6 +37,7 @@ export const crearBlog = async ({ cuerpo }: { cuerpo: cuerpo }) => {
 
 export const obtenerBlogs = async ({ query }: { query: query }) => {
   try {
+    const etiquetas = {};
     const filtros = {};
 
     if (query.estatus) {
@@ -47,14 +50,23 @@ export const obtenerBlogs = async ({ query }: { query: query }) => {
       };
     }
 
+    if (query.etiqueta) {
+      etiquetas['etiqueta'] = {
+        [Op.substring]: query.etiqueta
+      };
+    }
+
+    const totalBlogs = await Blogs.count({ where: filtros });
+
     const obtenerBlogs = await Blogs.findAll({
       where: filtros,
       limit: query.limit ? Number(query.limit) : null,
-      include: Etiquetas,
+      offset: query.offset ? Number(query.offset) : null,
+      include: [{ model: Etiquetas, where: etiquetas }],
       order: [['updatedAt', 'DESC']]
     });
 
-    return obtenerBlogs;
+    return [obtenerBlogs, totalBlogs];
   } catch (err) {
     throw err;
   }

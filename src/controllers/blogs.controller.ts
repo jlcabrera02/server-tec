@@ -78,8 +78,8 @@ controller.obtenerBlog = async (req, res) => {
 
 controller.obtenerBlogs = async (req, res) => {
   try {
-    const response = await obtenerBlogs({ query: req.query });
-    res.status(200).json({ success: true, response });
+    const [response, totalBlogs] = await obtenerBlogs({ query: req.query });
+    res.status(200).json({ success: true, response, totalBlogs });
   } catch (err) {
     console.log(err);
 
