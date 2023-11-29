@@ -1,23 +1,19 @@
 import sequelize from '@config/db.config';
 import { DataTypes } from 'sequelize';
 
-const Banners = sequelize.define('banners', {
-  idbanner: {
+const Banners = sequelize.define('permisos', {
+  idpermiso: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  imagen: {
+  permiso: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  mostrar: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false
-  },
-  usuario: {
+  descripcion: {
     type: DataTypes.STRING,
-    allowNull: true
+    allowNull: false
   }
 });
 

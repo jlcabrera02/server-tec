@@ -1,7 +1,7 @@
 import sequelize from '@config/db.config';
 import { DataTypes } from 'sequelize';
 
-const Blogs = sequelize.define('Blogs', {
+const Blogs = sequelize.define('blogs', {
   idblog: {
     type: DataTypes.INTEGER,
     primaryKey: true,

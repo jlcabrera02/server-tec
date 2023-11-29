@@ -188,14 +188,14 @@ export const editarEtiquetas = async ({
   try {
     const crear = sequelize.transaction(async (t) => {
       await EtiquetasBlogs.destroy({
-        where: { BlogIdblog: idblog },
+        where: { blogIdblog: idblog },
         transaction: t
       });
 
       const etiquetasCreate = await EtiquetasBlogs.bulkCreate(
         etiquetas.map((idEtiqueta: number) => ({
-          BlogIdblog: Number(idblog),
-          EtiquetaIdetiqueta: idEtiqueta
+          blogIdblog: Number(idblog),
+          etiquetaIdetiqueta: idEtiqueta
         })),
         { transaction: t }
       );

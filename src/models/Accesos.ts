@@ -1,16 +1,15 @@
 import sequelize from '@config/db.config';
 import { DataTypes } from 'sequelize';
 
-const Etiquetas = sequelize.define('etiquetas', {
-  idetiqueta: {
+const Banners = sequelize.define('accesos', {
+  idpermiso: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+    primaryKey: true
   },
-  etiqueta: {
+  usuario: {
     type: DataTypes.STRING,
     allowNull: false
   }
 });
 
-export default Etiquetas;
+export default Banners;

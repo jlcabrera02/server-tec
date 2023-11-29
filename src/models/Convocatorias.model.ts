@@ -1,7 +1,7 @@
 import sequelize from '@config/db.config';
 import { DataTypes } from 'sequelize';
 
-const Convocatoria = sequelize.define('Convocatoria', {
+const Convocatoria = sequelize.define('convocatoria', {
   idconvocatoria: {
     type: DataTypes.INTEGER,
     primaryKey: true,
