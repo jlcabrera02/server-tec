@@ -20,12 +20,13 @@ const controller = {
 
 controller.crearBanner = async (req, res) => {
   try {
+    const { usuario } = req.usuario;
     const { imagen } = req.files;
 
     const nombre = await guardarImagen({ imagen, nomenclatura: 'banner' });
 
     const response = await crearBanner({
-      cuerpo: { imagen: `/api/bannersimagenes/${nombre}` }
+      cuerpo: { imagen: `/api/bannersimagenes/${nombre}`, usuario }
     });
 
     res.status(200).json({ success: true, response });

@@ -1,20 +1,21 @@
 import sequelize from '@config/db.config';
+import useBcrypt from 'sequelize-bcrypt';
 import { DataTypes } from 'sequelize';
 
-const Banners = sequelize.define('usuarios', {
+const Users = sequelize.define('usuarios', {
   usuario: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     primaryKey: true
   },
   nombres: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  ape_pat: {
+  apepat: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  ape_mat: {
+  apemat: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -24,4 +25,10 @@ const Banners = sequelize.define('usuarios', {
   }
 });
 
-export default Banners;
+useBcrypt(Users, {
+  field: 'password',
+  rounds: 12,
+  compare: 'authenticate'
+});
+
+export default Users;

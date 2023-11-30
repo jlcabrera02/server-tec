@@ -43,11 +43,11 @@ export const obtenerBanners = async ({ querys }: querys) => {
 
 export const crearBanner = async ({ cuerpo }: propsCrearBanners) => {
   try {
-    const { imagen } = cuerpo;
+    const { imagen, usuario } = cuerpo;
     const crear = await Banners.create({
       imagen,
       mostrar: true,
-      usuario: 'cabrera'
+      usuario
     });
     return crear;
   } catch (err) {

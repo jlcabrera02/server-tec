@@ -3,6 +3,7 @@ import banners from '@routes/banners.route';
 import blogs from '@routes/blogs.route';
 import etiquetas from '@routes/etiquetas.route';
 import convocatorias from '@routes/convocatoria.route';
+import user from '@routes/users.route';
 
 import getImage, { obtenerArchivos } from '@utils/obtenerImagenes';
 
@@ -12,6 +13,7 @@ router.use('/banners', banners);
 router.use('/blogs', blogs);
 router.use('/etiquetas', etiquetas);
 router.use('/convocatorias', convocatorias);
+router.use('/auth', user);
 
 //Get Images
 router.get('/bannersimagenes/:imagen', getImage);
