@@ -10,7 +10,8 @@ import {
   nuevaImagen,
   editarImagenBlogPrincipal,
   modificarEstatusBlog,
-  editarEtiquetas
+  editarEtiquetas,
+  obtenerBlogsFiltroEtiquetas
 } from '@services/Blogs.services';
 import guardarImagen from '@utils/guardarImagen';
 import eliminarImg from '@utils/eliminarImagen';
@@ -18,6 +19,7 @@ const controller = {
   crearBlog: null, //
   obtenerBlog: null, //
   obtenerBlogs: null, //
+  obtenerBlogFiltroEtiqueta: null, //
   editarBlogTexto: null, //
   eliminarBlog: null, //
   modificarEstatus: null, //
@@ -66,6 +68,19 @@ controller.crearBlog = async (req, res) => {
 controller.obtenerBlog = async (req, res) => {
   try {
     const response = await obtenerBlog({ idBlog: req.params.idblog });
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al ingresar un nuevo blogs'
+    });
+  }
+};
+
+controller.obtenerBlogFiltroEtiqueta = async (req, res) => {
+  try {
+    const response = await obtenerBlogsFiltroEtiquetas({ query: req.query });
     res.status(200).json({ success: true, response });
   } catch (err) {
     res.status(400).json({

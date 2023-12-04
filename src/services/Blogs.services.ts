@@ -62,7 +62,56 @@ export const obtenerBlogs = async ({ query }: { query: query }) => {
       where: filtros,
       limit: query.limit ? Number(query.limit) : null,
       offset: query.offset ? Number(query.offset) : null,
-      include: [{ model: Etiquetas, where: etiquetas }],
+      include: [
+        {
+          model: Etiquetas,
+          where: Object.keys(etiquetas).length > 0 ? etiquetas : null
+        }
+      ],
+      order: [['updatedAt', 'DESC']]
+    });
+
+    return [obtenerBlogs, totalBlogs];
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const obtenerBlogsFiltroEtiquetas = async ({
+  query
+}: {
+  query: query;
+}) => {
+  try {
+    const etiquetas = {};
+    const filtros = {};
+
+    if (query.estatus) {
+      filtros['estatus'] = query.estatus;
+    }
+
+    if (query.mostrarSinVigencia !== 'true') {
+      filtros['fechavigente'] = {
+        [Op.gt]: sequelize.literal('NOW()')
+      };
+    }
+
+    if (query.etiqueta) {
+      etiquetas['etiqueta'] = {
+        [Op.substring]: query.etiqueta
+      };
+    }
+
+    const totalBlogs = await Etiquetas.count();
+
+    const obtenerBlogs = await Etiquetas.findAll({
+      where: etiquetas,
+      include: [
+        {
+          model: Blogs,
+          where: filtros
+        }
+      ],
       order: [['updatedAt', 'DESC']]
     });
 

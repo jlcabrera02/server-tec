@@ -11,6 +11,10 @@ import Accesos from './Accesos.models';
 
 Blogs.belongsToMany(Etiquetas, { through: EtiquetasBlogs });
 Etiquetas.belongsToMany(Blogs, { through: EtiquetasBlogs });
+Blogs.hasMany(EtiquetasBlogs);
+EtiquetasBlogs.belongsTo(Blogs);
+Etiquetas.hasMany(EtiquetasBlogs);
+EtiquetasBlogs.belongsTo(Etiquetas);
 
 Users.belongsToMany(Permisos, { through: Accesos });
 Permisos.belongsToMany(Users, { through: Accesos });

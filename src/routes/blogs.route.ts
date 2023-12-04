@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/obtenerxidblog/:idblog', blogs.obtenerBlog);
 router.get('/obtener', blogs.obtenerBlogs);
+router.get('/filtrar', blogs.obtenerBlogFiltroEtiqueta);
 
 router.post('/crear', verifyAdmin, blogs.crearBlog);
 router.post('/nuevaimagen', verifyAdmin, blogs.nuevaImagen);
