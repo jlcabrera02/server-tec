@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "createDb": "node ./build/seeders/crearDb.js",
+    "createCategorias": "node ./build/seeders/crearCategorias.js",
+    "createPermisos": "node ./build/seeders/crearPermisos.js",
     "build": "babel src --extensions \".ts, .js\"  --out-dir build --copy-files",
     "start": "node ./build/index.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --ignore-watch node_modules  ./src/index.ts"

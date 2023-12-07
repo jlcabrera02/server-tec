@@ -22,7 +22,8 @@ module.exports = {
           '@services': './src/services',
           '@config': './src/config',
           '@middlewares': './src/middlewares',
-          '@utils': './src/utils'
+          '@utils': './src/utils',
+          '@seeders': './src/seeders'
         }
       }
     ]
