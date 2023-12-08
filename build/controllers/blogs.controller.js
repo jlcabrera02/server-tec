@@ -16,6 +16,8 @@ const controller = {
   //
   obtenerBlogs: null,
   //
+  obtenerBlogFiltroEtiqueta: null,
+  //
   editarBlogTexto: null,
   //
   eliminarBlog: null,
@@ -88,14 +90,32 @@ controller.obtenerBlog = async (req, res) => {
     });
   }
 };
-controller.obtenerBlogs = async (req, res) => {
+controller.obtenerBlogFiltroEtiqueta = async (req, res) => {
   try {
-    const response = await (0, _Blogs.obtenerBlogs)({
+    const response = await (0, _Blogs.obtenerBlogsFiltroEtiquetas)({
       query: req.query
     });
     res.status(200).json({
       success: true,
       response
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al ingresar un nuevo blogs'
+    });
+  }
+};
+controller.obtenerBlogs = async (req, res) => {
+  try {
+    const [response, totalBlogs] = await (0, _Blogs.obtenerBlogs)({
+      query: req.query
+    });
+    res.status(200).json({
+      success: true,
+      response,
+      totalBlogs
     });
   } catch (err) {
     console.log(err);

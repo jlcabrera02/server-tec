@@ -20,6 +20,9 @@ const controller = {
 controller.crearBanner = async (req, res) => {
   try {
     const {
+      usuario
+    } = req.usuario;
+    const {
       imagen
     } = req.files;
     const nombre = await (0, _guardarImagen.default)({
@@ -28,7 +31,8 @@ controller.crearBanner = async (req, res) => {
     });
     const response = await (0, _Banners.crearBanner)({
       cuerpo: {
-        imagen: `/api/bannersimagenes/${nombre}`
+        imagen: `/api/bannersimagenes/${nombre}`,
+        usuario
       }
     });
     res.status(200).json({

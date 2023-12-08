@@ -36,7 +36,7 @@ const guardarArchivos = ({
   nomenclatura
 }) => {
   return new Promise((resolve, reject) => {
-    const nombre = nomenclatura + (0, _generadornombre.default)() + '.' + archivo.mimetype.replace('pdf/', '');
+    const nombre = nomenclatura + (0, _generadornombre.default)() + '.' + archivo.mimetype.replace('application/', '');
     archivo.mv(_path.default.join(__dirname, '../public/media/archivos/', nombre), err => {
       if (err) {
         return reject({

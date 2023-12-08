@@ -7,9 +7,8 @@ var _morgan = _interopRequireDefault(require("morgan"));
 var _path = _interopRequireDefault(require("path"));
 var _bodyParser = _interopRequireDefault(require("body-parser"));
 var _dotenv = require("dotenv");
+var _index = _interopRequireDefault(require("./routes/index.route"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-// import { createTables } from '@models/index';
-// createTables();
 (0, _dotenv.config)();
 const app = (0, _express.default)();
 app.set('PORT', process.env.PORT);
@@ -26,9 +25,7 @@ app.use('/static', _express.default.static(_path.default.join(__dirname, 'public
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
-
-// app.use('/api', indexRoute);
-
+app.use('/api', _index.default);
 app.listen(3000, () => {
   console.log(`App use port ${app.get('PORT')}`);
 });

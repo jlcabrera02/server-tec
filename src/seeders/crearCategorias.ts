@@ -85,8 +85,6 @@ export const crearCat = async () => {
       ruta: 'ambiental'
     }
   ]);
-};
 
-(async () => {
-  await crearCat();
-})();
+  process.exit();
+};

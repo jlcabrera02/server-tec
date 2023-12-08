@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.verifyAdmin = void 0;
+exports.verifyAdmin = exports.sing = void 0;
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _dotenv = require("dotenv");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -24,6 +24,7 @@ const verifyAdmin = async (req, res, next) => {
       expiresIn: 60 * 60 * 24
     });
     if (userAuth) {
+      req.usuario = userAuth;
       next();
     } else {
       res.status(403).json({
@@ -39,3 +40,9 @@ const verifyAdmin = async (req, res, next) => {
   }
 };
 exports.verifyAdmin = verifyAdmin;
+const sing = async data => {
+  return await _jsonwebtoken.default.sign(data, process.env.PRIVATE_KEY, {
+    expiresIn: 60 * 60 * 24
+  });
+};
+exports.sing = sing;

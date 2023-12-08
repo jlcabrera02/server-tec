@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "createDb": "node ./build/seeders/crearDb.js",
-    "createCategorias": "node ./build/seeders/crearCategorias.js",
-    "createPermisos": "node ./build/seeders/crearPermisos.js",
+    "createDb": "node -e \"require('./build/seeders/index.js').createTables()\"",
+    "createCategorias": "node -e \"require('./build/seeders/index.js').crearCategorias()\"",
+    "createPermisos": "node -e \"require('./build/seeders/index.js').crearPermisos()\"",
     "build": "babel src --extensions \".ts, .js\"  --out-dir build --copy-files",
     "start": "node ./build/index.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --ignore-watch node_modules  ./src/index.ts"

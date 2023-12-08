@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.obtenerBlogs = exports.obtenerBlog = exports.nuevaImagen = exports.modificarEstatusBlog = exports.eliminarImagenes = exports.eliminarBlog = exports.editarImagenes = exports.editarImagenPrincipal = exports.editarImagenBlogPrincipal = exports.editarEtiquetas = exports.editarBlogTexto = exports.crearBlog = void 0;
+exports.obtenerBlogsFiltroEtiquetas = exports.obtenerBlogs = exports.obtenerBlog = exports.nuevaImagen = exports.modificarEstatusBlog = exports.eliminarImagenes = exports.eliminarBlog = exports.editarImagenes = exports.editarImagenPrincipal = exports.editarImagenBlogPrincipal = exports.editarEtiquetas = exports.editarBlogTexto = exports.crearBlog = void 0;
 var _db = _interopRequireDefault(require("../config/db.config"));
 var _models = _interopRequireDefault(require("../models"));
 var _sequelize = require("sequelize");
@@ -35,6 +35,7 @@ const obtenerBlogs = async ({
   query
 }) => {
   try {
+    const etiquetas = {};
     const filtros = {};
     if (query.estatus) {
       filtros['estatus'] = query.estatus;
@@ -44,18 +45,64 @@ const obtenerBlogs = async ({
         [_sequelize.Op.gt]: _db.default.literal('NOW()')
       };
     }
+    if (query.etiqueta) {
+      etiquetas['etiqueta'] = {
+        [_sequelize.Op.substring]: query.etiqueta
+      };
+    }
+    const totalBlogs = await Blogs.count({
+      where: filtros
+    });
     const obtenerBlogs = await Blogs.findAll({
       where: filtros,
       limit: query.limit ? Number(query.limit) : null,
-      include: Etiquetas,
+      offset: query.offset ? Number(query.offset) : null,
+      include: [{
+        model: Etiquetas,
+        where: Object.keys(etiquetas).length > 0 ? etiquetas : null
+      }],
       order: [['updatedAt', 'DESC']]
     });
-    return obtenerBlogs;
+    return [obtenerBlogs, totalBlogs];
   } catch (err) {
     throw err;
   }
 };
 exports.obtenerBlogs = obtenerBlogs;
+const obtenerBlogsFiltroEtiquetas = async ({
+  query
+}) => {
+  try {
+    const etiquetas = {};
+    const filtros = {};
+    if (query.estatus) {
+      filtros['estatus'] = query.estatus;
+    }
+    if (query.mostrarSinVigencia !== 'true') {
+      filtros['fechavigente'] = {
+        [_sequelize.Op.gt]: _db.default.literal('NOW()')
+      };
+    }
+    if (query.etiqueta) {
+      etiquetas['etiqueta'] = {
+        [_sequelize.Op.substring]: query.etiqueta
+      };
+    }
+    const totalBlogs = await Etiquetas.count();
+    const obtenerBlogs = await Etiquetas.findAll({
+      where: etiquetas,
+      include: [{
+        model: Blogs,
+        where: filtros
+      }],
+      order: [['updatedAt', 'DESC']]
+    });
+    return [obtenerBlogs, totalBlogs];
+  } catch (err) {
+    throw err;
+  }
+};
+exports.obtenerBlogsFiltroEtiquetas = obtenerBlogsFiltroEtiquetas;
 const obtenerBlog = async ({
   idBlog
 }) => {
@@ -171,13 +218,13 @@ const editarEtiquetas = async ({
     const crear = _db.default.transaction(async t => {
       await EtiquetasBlogs.destroy({
         where: {
-          BlogIdblog: idblog
+          blogIdblog: idblog
         },
         transaction: t
       });
       const etiquetasCreate = await EtiquetasBlogs.bulkCreate(etiquetas.map(idEtiqueta => ({
-        BlogIdblog: Number(idblog),
-        EtiquetaIdetiqueta: idEtiqueta
+        blogIdblog: Number(idblog),
+        etiquetaIdetiqueta: idEtiqueta
       })), {
         transaction: t
       });

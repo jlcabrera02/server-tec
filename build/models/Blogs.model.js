@@ -7,7 +7,7 @@ exports.default = void 0;
 var _db = _interopRequireDefault(require("../config/db.config"));
 var _sequelize = require("sequelize");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-const Blogs = _db.default.define('Blogs', {
+const Blogs = _db.default.define('blogs', {
   idblog: {
     type: _sequelize.DataTypes.INTEGER,
     primaryKey: true,
