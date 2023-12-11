@@ -1,3 +1,4 @@
+import Subcategorias from '@models/Subcategorias.model';
 import models from '@models/index';
 const { Categorias } = models;
 
@@ -25,7 +26,10 @@ export const obtenerCategorias = async (querys: querys) => {
       delete filters['show'];
     }
 
-    const crear = await Categorias.findAll({ where: filters });
+    const crear = await Categorias.findAll({
+      where: filters,
+      include: Subcategorias
+    });
     return crear;
   } catch (err) {
     throw err;

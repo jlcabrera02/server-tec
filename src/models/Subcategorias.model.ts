@@ -13,7 +13,8 @@ const Subcategorias = sequelize.define('subcategorias', {
   },
   subcategoria: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   show: {
     type: DataTypes.BOOLEAN,
@@ -21,7 +22,7 @@ const Subcategorias = sequelize.define('subcategorias', {
     defaultValue: true
   },
   descripcion: {
-    type: DataTypes.BOOLEAN,
+    type: DataTypes.STRING,
     allowNull: false
   },
   ruta: {

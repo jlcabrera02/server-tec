@@ -11,13 +11,22 @@ import Accesos from './Accesos.models';
 import Categorias from './Categorias.model';
 import Subcategorias from './Subcategorias.model';
 import Articulos from './Articulos.model';
+import EtiquetasArticulos from './Etiquetas_Articulos.model';
 
 Blogs.belongsToMany(Etiquetas, { through: EtiquetasBlogs });
 Etiquetas.belongsToMany(Blogs, { through: EtiquetasBlogs });
+Articulos.belongsToMany(Etiquetas, { through: EtiquetasArticulos });
+Etiquetas.belongsToMany(Articulos, { through: EtiquetasArticulos });
+
 Blogs.hasMany(EtiquetasBlogs);
 EtiquetasBlogs.belongsTo(Blogs);
 Etiquetas.hasMany(EtiquetasBlogs);
 EtiquetasBlogs.belongsTo(Etiquetas);
+
+Articulos.hasMany(EtiquetasArticulos);
+EtiquetasArticulos.belongsTo(Articulos);
+Etiquetas.hasMany(EtiquetasArticulos);
+EtiquetasArticulos.belongsTo(Etiquetas);
 
 Categorias.hasMany(Subcategorias, { foreignKey: 'idcategoria' });
 
@@ -36,7 +45,8 @@ export default {
   Permisos,
   Categorias,
   Subcategorias,
-  Articulos
+  Articulos,
+  EtiquetasArticulos
 };
 
 export const createTables = () => {

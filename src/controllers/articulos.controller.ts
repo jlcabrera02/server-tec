@@ -3,7 +3,8 @@ import {
   obtenerArticulo as oa,
   obtenerArticulos as oas,
   eliminarArticulo as da,
-  editarArticulo as ea
+  editarArticulo as ea,
+  editarEtiquetas as et
 } from '@services/Articulos.services';
 
 const controller = {
@@ -11,16 +12,18 @@ const controller = {
   obtenerArticulo: null,
   obtenerArticulos: null,
   actualizarArticulo: null,
-  eliminarArticulo: null
+  eliminarArticulo: null,
+  editarEtiquetas: null
 };
 
 controller.crearArticulo = async (req, res) => {
   try {
+    const { usuario } = req.usuario;
     const ruta: string = req.body.hasOwnProperty()
       ? req.body.ruta
       : req.body.titulo.replaceAll(' ', '-').toLowerCase();
 
-    const response = await ca({ ...req.body, ruta });
+    const response = await ca({ ...req.body, ruta, usuario });
 
     res.status(200).json({ success: true, response });
   } catch (err) {
@@ -80,6 +83,27 @@ controller.eliminarArticulo = async (req, res) => {
       success: false,
       response: err,
       msg: 'Error al eliminar articulo'
+    });
+  }
+};
+
+controller.editarEtiquetas = async (req, res) => {
+  try {
+    const { idsEtiquetas } = req.body;
+
+    const response = await et({
+      idarticulo: req.params.idarticulo,
+      etiquetas: idsEtiquetas
+    });
+
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    console.log(err);
+
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al agregar etiquetas'
     });
   }
 };

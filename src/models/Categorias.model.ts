@@ -21,10 +21,11 @@ const Categorias = sequelize.define('categorias', {
   },
   categoria: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   descripcion: {
-    type: DataTypes.BOOLEAN,
+    type: DataTypes.STRING,
     allowNull: false
   },
   ruta: {

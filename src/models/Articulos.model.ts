@@ -21,7 +21,7 @@ const Articulos = sequelize.define('articulos', {
     type: DataTypes.DATEONLY,
     allowNull: false
   },
-  match_route: {
+  ruta: {
     type: DataTypes.STRING,
     allowNull: true,
     comment:
