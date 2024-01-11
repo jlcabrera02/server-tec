@@ -19,9 +19,12 @@ const controller = {
 controller.crearArticulo = async (req, res) => {
   try {
     const { usuario } = req.usuario;
-    const ruta: string = req.body.hasOwnProperty()
+    const rutaExists = req.body.ruta;
+    const ruta: string = rutaExists
       ? req.body.ruta
       : req.body.titulo.replaceAll(' ', '-').toLowerCase();
+
+    console.log(rutaExists);
 
     const response = await ca({ ...req.body, ruta, usuario });
 
