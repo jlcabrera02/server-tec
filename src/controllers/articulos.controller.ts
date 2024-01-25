@@ -24,8 +24,6 @@ controller.crearArticulo = async (req, res) => {
       ? req.body.ruta
       : req.body.titulo.replaceAll(' ', '-').toLowerCase();
 
-    console.log(rutaExists);
-
     const response = await ca({ ...req.body, ruta, usuario });
 
     res.status(200).json({ success: true, response });

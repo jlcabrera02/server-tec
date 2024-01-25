@@ -21,26 +21,31 @@ const controller = {
 
 controller.crearConvocatoria = async (req, res) => {
   try {
+    let rutaArchivoPDF: string;
     const { pdf, imagen } = req.files;
-    const { titulo, fecha, descripcion } = JSON.parse(req.body.body);
-
-    console.log(req.body);
+    const { titulo, fecha, descripcion, urlPdf } = JSON.parse(req.body.body);
 
     const imagenName = await guardarImagen({
       imagen: imagen,
       nomenclatura: 'imagenconvoca'
     });
 
-    const pdfName = await guardarArchivos({
-      archivo: pdf,
-      nomenclatura: 'pdfconvoca'
-    });
+    if (!pdf) {
+      rutaArchivoPDF = urlPdf;
+    } else {
+      const pdfName = await guardarArchivos({
+        archivo: pdf,
+        nomenclatura: 'pdfconvoca'
+      });
+
+      rutaArchivoPDF = `/api/convocatoria/archivos/${pdfName}`;
+    }
 
     const response = await crearConvocatoria({
       titulo,
       fecha,
       descripcion,
-      pdf: `/api/convocatoria/archivos/${pdfName}`,
+      pdf: rutaArchivoPDF,
       imagen: `/api/convocatoria/imagen/${imagenName}`
     });
 
