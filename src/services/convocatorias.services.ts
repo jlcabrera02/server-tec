@@ -13,10 +13,29 @@ type orderConvocatoria = 'idconvocatoria' | 'fecha';
 
 export const obtenerConvocatorias = async (query: {
   order?: orderConvocatoria;
+  showAll?: any;
 }) => {
   try {
+    const filtros = { mostrar: true };
+
+    if (query.showAll) {
+      delete filtros.mostrar;
+    }
+
     const convocatorias = await Convocatorias.findAll({
+      where: filtros,
       order: query.order ? [[query.order, 'DESC']] : []
+    });
+    return convocatorias;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const obtenerConvocatoria = async (ruta: string) => {
+  try {
+    const convocatorias = await Convocatorias.findOne({
+      where: { ruta }
     });
     return convocatorias;
   } catch (err) {

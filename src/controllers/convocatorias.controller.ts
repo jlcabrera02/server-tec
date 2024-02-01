@@ -4,7 +4,8 @@ import {
   actualizarDatos,
   actualizarPDF,
   actualizarImg,
-  eliminarConvocatoria
+  eliminarConvocatoria,
+  obtenerConvocatoria
 } from '@services/convocatorias.services';
 import models from '@models/index';
 import guardarImagen, { guardarArchivos } from 'src/utils/guardarImagen';
@@ -13,6 +14,7 @@ import eliminarImagen, { eliminarArchivo } from 'src/utils/eliminarImagen';
 const controller = {
   crearConvocatoria: null,
   obtenerConvocatorias: null,
+  obtenerConvocatoria: null,
   actualizarConvocatoriasDatos: null,
   actualizarPDF: null,
   actualizarImagen: null,
@@ -21,9 +23,13 @@ const controller = {
 
 controller.crearConvocatoria = async (req, res) => {
   try {
-    let rutaArchivoPDF: string;
+    let rutaArchivoPDF: string = null;
     const { pdf, imagen } = req.files;
-    const { titulo, fecha, descripcion, urlPdf } = JSON.parse(req.body.body);
+    const { titulo, fecha, descripcion, ruta, contenido } = JSON.parse(
+      req.body.body
+    );
+
+    const moreContent = { ruta: null, contenido: null };
 
     const imagenName = await guardarImagen({
       imagen: imagen,
@@ -31,7 +37,12 @@ controller.crearConvocatoria = async (req, res) => {
     });
 
     if (!pdf) {
-      rutaArchivoPDF = urlPdf;
+      const rutas: string = ruta
+        ? ruta
+        : req.body.titulo.replaceAll(' ', '-').toLowerCase();
+
+      moreContent.ruta = rutas;
+      moreContent.contenido = contenido;
     } else {
       const pdfName = await guardarArchivos({
         archivo: pdf,
@@ -46,7 +57,8 @@ controller.crearConvocatoria = async (req, res) => {
       fecha,
       descripcion,
       pdf: rutaArchivoPDF,
-      imagen: `/api/convocatoria/imagen/${imagenName}`
+      imagen: `/api/convocatoria/imagen/${imagenName}`,
+      ...moreContent
     });
 
     res.status(200).json({ success: true, response });
@@ -70,6 +82,21 @@ controller.obtenerConvocatorias = async (req, res) => {
       success: false,
       response: err,
       msg: 'Error al obtener convocatorias'
+    });
+  }
+};
+
+controller.obtenerConvocatoria = async (req, res) => {
+  try {
+    console.log(req.params);
+
+    const response = await obtenerConvocatoria(req.params.url);
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al obtener convocatoria'
     });
   }
 };

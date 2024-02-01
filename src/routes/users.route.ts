@@ -5,6 +5,6 @@ import { verifyAdmin } from '@middlewares/auth';
 const router = Router();
 
 router.post('/login', users.login);
-router.post('/crear-usuario', users.crearUsuario);
+router.post('/crear-usuario', verifyAdmin, users.crearUsuario);
 
 export default router;

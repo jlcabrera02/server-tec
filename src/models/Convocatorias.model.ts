@@ -15,6 +15,15 @@ const Convocatoria = sequelize.define('convocatoria', {
     type: DataTypes.TEXT,
     allowNull: false
   },
+  contenido: {
+    type: DataTypes.TEXT('long'),
+    allowNull: true
+  },
+  mostrar: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    defaultValue: true
+  },
   fecha: {
     type: DataTypes.DATEONLY,
     allowNull: false
@@ -25,7 +34,11 @@ const Convocatoria = sequelize.define('convocatoria', {
   },
   pdf: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
+  },
+  ruta: {
+    type: DataTypes.STRING,
+    allowNull: true
   }
 });
 

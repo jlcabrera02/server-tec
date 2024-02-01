@@ -5,6 +5,7 @@ import { verifyAdmin } from '@middlewares/auth';
 const router = Router();
 
 router.get('/obtener', conv.obtenerConvocatorias);
+router.get('/obtener/convocatoria/:url', conv.obtenerConvocatoria);
 router.post('/crear', verifyAdmin, conv.crearConvocatoria);
 
 router.put(
