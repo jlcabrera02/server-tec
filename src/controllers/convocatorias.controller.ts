@@ -13,12 +13,34 @@ import eliminarImagen, { eliminarArchivo } from 'src/utils/eliminarImagen';
 
 const controller = {
   crearConvocatoria: null,
+  subirArchivo: null,
   obtenerConvocatorias: null,
   obtenerConvocatoria: null,
   actualizarConvocatoriasDatos: null,
   actualizarPDF: null,
   actualizarImagen: null,
   eliminarConvocatoria: null
+};
+
+controller.subirArchivo = async (req, res) => {
+  try {
+    const { file } = req.files;
+    const pdfName = await guardarArchivos({
+      archivo: file,
+      nomenclatura: ''
+    });
+
+    res.status(200).json({
+      success: true,
+      response: `/api/convocatoria/archivos/${pdfName}`
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al subir pdf'
+    });
+  }
 };
 
 controller.crearConvocatoria = async (req, res) => {

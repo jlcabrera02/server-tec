@@ -8,6 +8,8 @@ router.get('/obtener', conv.obtenerConvocatorias);
 router.get('/obtener/convocatoria/:url', conv.obtenerConvocatoria);
 router.post('/crear', verifyAdmin, conv.crearConvocatoria);
 
+router.post('/upload-pdf', verifyAdmin, conv.subirArchivo);
+
 router.put(
   '/actualizardatosxidconvocatoria/:idconvocatoria',
   verifyAdmin,
