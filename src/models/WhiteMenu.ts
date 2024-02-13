@@ -14,7 +14,7 @@ const WhiteMenu = sequelize.define(
       allowNull: false
     },
     url: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     }
   },
