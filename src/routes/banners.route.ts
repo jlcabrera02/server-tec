@@ -16,6 +16,8 @@ router.put(
   verifyAdmin,
   banners.vigenciaBanner
 );
+router.put('/linkxidbanner/:idbanner', verifyAdmin, banners.editarURL);
+router.delete('/linkxidbanner/:idbanner', verifyAdmin, banners.eliminarURL);
 router.delete(
   '/eliminarxidbanner/:idbanner',
   verifyAdmin,

@@ -18,6 +18,10 @@ const Banners = sequelize.define('banners', {
   usuario: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  url: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 });
 

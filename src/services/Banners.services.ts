@@ -92,3 +92,23 @@ export const eliminarBanner = async ({ idBanner }: propsEditarBanner) => {
     throw err;
   }
 };
+
+export const editarURL = async ({
+  url,
+  idBanner,
+  eliminar
+}: {
+  url: string;
+  idBanner: number;
+  eliminar: boolean;
+}) => {
+  try {
+    const actualizar = await Banners.update(
+      { url: eliminar ? null : url },
+      { where: { idbanner: idBanner } }
+    );
+    return actualizar;
+  } catch (err) {
+    throw err;
+  }
+};

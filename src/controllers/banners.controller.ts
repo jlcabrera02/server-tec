@@ -3,7 +3,8 @@ import {
   obtenerBanners,
   editarBanner,
   eliminarBanner,
-  editarVigencia
+  editarVigencia,
+  editarURL as EditURL
 } from '@services/Banners.services';
 import models from '@models/index';
 import guardarImagen from '@utils/guardarImagen';
@@ -15,6 +16,8 @@ const controller = {
   actualizarBanner: null,
   eliminarBanner: null,
   vigenciaBanner: null,
+  editarURL: null,
+  eliminarURL: null,
   obtenerImagenesBanners: null
 };
 
@@ -120,6 +123,46 @@ controller.vigenciaBanner = async (req, res) => {
     const response = await editarVigencia({
       cuerpo: { mostrar: vigente ? true : false },
       idBanner: req.params.idbanner
+    });
+
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al actualizar el banner'
+    });
+  }
+};
+
+controller.editarURL = async (req, res) => {
+  try {
+    const { url } = req.body;
+    const response = await EditURL({
+      url,
+      idBanner: req.params.idbanner,
+      eliminar: false
+    });
+
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    console.log(err);
+
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al actualizar el banner'
+    });
+  }
+};
+
+controller.eliminarURL = async (req, res) => {
+  try {
+    const { url } = req.body;
+    const response = await EditURL({
+      url,
+      idBanner: req.params.idbanner,
+      eliminar: true
     });
 
     res.status(200).json({ success: true, response });
