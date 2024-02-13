@@ -8,8 +8,8 @@ import {
   obtenerConvocatoria
 } from '@services/convocatorias.services';
 import models from '@models/index';
-import guardarImagen, { guardarArchivos } from 'src/utils/guardarImagen';
-import eliminarImagen, { eliminarArchivo } from 'src/utils/eliminarImagen';
+import guardarImagen, { guardarArchivos } from '@utils/guardarImagen';
+import eliminarImagen, { eliminarArchivo } from '@utils/eliminarImagen';
 
 const controller = {
   crearConvocatoria: null,

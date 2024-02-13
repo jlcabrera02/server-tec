@@ -6,8 +6,8 @@ import {
   editarVigencia
 } from '@services/Banners.services';
 import models from '@models/index';
-import guardarImagen from 'src/utils/guardarImagen';
-import eliminarImagen from 'src/utils/eliminarImagen';
+import guardarImagen from '@utils/guardarImagen';
+import eliminarImagen from '@utils/eliminarImagen';
 
 const controller = {
   crearBanner: null,
