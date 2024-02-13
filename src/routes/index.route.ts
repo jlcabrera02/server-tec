@@ -7,6 +7,7 @@ import categorias from '@routes/categoria.route';
 import subcategorias from '@routes/subcategoria.route';
 import articulos from '@routes/articulos.route';
 import user from '@routes/users.route';
+import menuBlanco from '@routes/menuBlanco.route';
 
 import getImage, { obtenerArchivos } from '@utils/obtenerImagenes';
 
@@ -20,6 +21,7 @@ router.use('/auth', user);
 router.use('/categorias', categorias);
 router.use('/subcategorias', subcategorias);
 router.use('/articulos', articulos);
+router.use('/menu-blanco', menuBlanco);
 
 //Get Images
 router.get('/bannersimagenes/:imagen', getImage);

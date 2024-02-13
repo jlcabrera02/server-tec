@@ -12,6 +12,7 @@ import Categorias from './Categorias.model';
 import Subcategorias from './Subcategorias.model';
 import Articulos from './Articulos.model';
 import EtiquetasArticulos from './Etiquetas_Articulos.model';
+import WhiteMenu from './WhiteMenu';
 
 Blogs.belongsToMany(Etiquetas, { through: EtiquetasBlogs });
 Etiquetas.belongsToMany(Blogs, { through: EtiquetasBlogs });
@@ -46,7 +47,8 @@ export default {
   Categorias,
   Subcategorias,
   Articulos,
-  EtiquetasArticulos
+  EtiquetasArticulos,
+  WhiteMenu
 };
 
 export const createTables = () => {
