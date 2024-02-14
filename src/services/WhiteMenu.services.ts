@@ -1,5 +1,5 @@
 import models from '@models/index';
-const { WhiteMenu } = models;
+const { WhiteMenu, WhiteSubMenu } = models;
 
 type cuerpo = {
   nombre: string;
@@ -8,7 +8,7 @@ type cuerpo = {
 
 export const obtenerMenus = async () => {
   try {
-    const crear = await WhiteMenu.findAll();
+    const crear = await WhiteMenu.findAll({ include: WhiteSubMenu });
     return crear;
   } catch (err) {
     throw err;

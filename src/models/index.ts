@@ -14,6 +14,7 @@ import Subcategorias from './Subcategorias.model';
 import Articulos from './Articulos.model';
 import EtiquetasArticulos from './Etiquetas_Articulos.model';
 import WhiteMenu from './WhiteMenu';
+import WhiteSubMenu from './WhiteSubMenu';
 
 Blogs.belongsToMany(Etiquetas, { through: EtiquetasBlogs });
 Etiquetas.belongsToMany(Blogs, { through: EtiquetasBlogs });
@@ -35,6 +36,9 @@ Categorias.hasMany(Subcategorias, { foreignKey: 'idcategoria' });
 Roles.belongsToMany(Permisos, { through: RolesAndPermisos });
 Permisos.belongsToMany(Roles, { through: RolesAndPermisos });
 
+WhiteSubMenu.belongsTo(WhiteMenu, { foreignKey: 'idmenu' });
+WhiteMenu.hasMany(WhiteSubMenu, { foreignKey: 'idmenu' });
+
 Users.belongsTo(Roles, { foreignKey: 'rol' });
 
 export default {
@@ -53,7 +57,8 @@ export default {
   EtiquetasArticulos,
   WhiteMenu,
   Roles,
-  RolesAndPermisos
+  RolesAndPermisos,
+  WhiteSubMenu
 };
 
 export const createTables = () => {

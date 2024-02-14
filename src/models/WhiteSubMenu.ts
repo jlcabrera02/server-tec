@@ -1,10 +1,10 @@
 import sequelize from '@config/db.config';
 import { DataTypes } from 'sequelize';
 
-const WhiteMenu = sequelize.define(
-  'white_menu',
+const WhiteSubMenu = sequelize.define(
+  'white_submenu',
   {
-    idmenu: {
+    idsubmenu: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
@@ -15,7 +15,11 @@ const WhiteMenu = sequelize.define(
     },
     url: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: false
+    },
+    idmenu: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   },
   {
@@ -23,4 +27,4 @@ const WhiteMenu = sequelize.define(
   }
 );
 
-export default WhiteMenu;
+export default WhiteSubMenu;
