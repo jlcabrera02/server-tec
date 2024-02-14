@@ -12,7 +12,7 @@ const controller = {
 
 controller.crearUsuario = async (req, res) => {
   try {
-    const response = await cu(req.body);
+    const response = await cu({ ...req.body, rol: 'administrador' });
 
     const usuario = req.usuario;
 
@@ -45,7 +45,6 @@ controller.obtenerPermisos = async (req, res) => {
 
     res.status(200).json({ success: true, response });
   } catch (err) {
-    console.log(err);
 
     res.status(400).json({
       success: false,

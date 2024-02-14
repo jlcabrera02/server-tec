@@ -6,7 +6,12 @@ type cuerpoLogin = {
   password: boolean;
 };
 
-type cuerpo = { nombres: string; apepat: string; apemat: string } & cuerpoLogin;
+type cuerpo = {
+  nombres: string;
+  apepat: string;
+  apemat: string;
+  rol: string;
+} & cuerpoLogin;
 
 export const login = async (body: cuerpoLogin) => {
   try {
@@ -14,7 +19,7 @@ export const login = async (body: cuerpoLogin) => {
       usuario: body.usuario
     };
 
-    const login = await Users.findOne({ where: filters, include: Permisos });
+    const login = await Users.findOne({ where: filters });
 
     const authenticate = await login.authenticate(body.password);
     if (!authenticate) throw { msg: 'Error contraseña incorrecta' };
@@ -31,12 +36,13 @@ export const login = async (body: cuerpoLogin) => {
 
 export const crearUsuario = async (cuerpo: cuerpo) => {
   try {
-    const { nombres, apepat, apemat, password, usuario } = cuerpo;
+    const { nombres, apepat, apemat, password, usuario, rol } = cuerpo;
     const crear = await Users.create({
       nombres,
       apemat,
       usuario,
       apepat,
+      rol,
       password
     });
     return crear;
