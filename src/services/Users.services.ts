@@ -1,5 +1,5 @@
 import models from '@models/index';
-const { Users, Permisos }: any = models;
+const { Users, Permisos, Roles, RolesAndPermisos }: any = models;
 
 type cuerpoLogin = {
   usuario: string;
@@ -47,6 +47,37 @@ export const crearUsuario = async (cuerpo: cuerpo) => {
     });
     return crear;
   } catch (err) {
+    throw err;
+  }
+};
+
+export const obtenerPermisos = async () => {
+  try {
+    const permisos = await Permisos.findAll();
+    return permisos;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const obtenerRoles = async () => {
+  try {
+    const roles = await Roles.findAll();
+    return roles;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const obtenerRolesPermisos = async () => {
+  try {
+    const roles = await Roles.findAll({
+      include: [{ model: RolesAndPermisos, as: 'permisos_permitidos' }]
+    });
+    return roles;
+  } catch (err) {
+    console.log(err);
+
     throw err;
   }
 };

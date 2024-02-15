@@ -5,54 +5,64 @@ export const crearPermisos = async () => {
     await Permisos.bulkCreate([
       {
         idpermiso: 1,
-        permiso: 'Super usuario',
-        descripcion: 'Es un usuario con el nivel mas alto'
+        permiso: 'Crear usuarios',
+        descripcion:
+          'El usuario puede crear otros usuario y tiene la capacidad de generar roles y permisos'
       },
       {
         idpermiso: 2,
-        permiso: 'difucion',
-        descripcion: 'Para el departamento de difucion'
+        permiso: 'Crear Articulos',
+        descripcion: 'El usuario tendra la capacidad de crear articulos'
       },
       {
         idpermiso: 3,
-        permiso: 'sistemas',
-        descripcion: 'Para administradores de la carrera de sistemas'
+        permiso: 'Editar articulos',
+        descripcion: 'El usuario tendra la capacidad de editar articulos'
       },
       {
         idpermiso: 4,
-        permiso: 'ambiental',
-        descripcion: 'Para administradores de la carrera de ambiental'
+        permiso: 'Eliminar Articulos',
+        descripcion: 'El usuario tendra la capacidad de eliminar articulos'
       },
       {
         idpermiso: 5,
-        permiso: 'industrial',
-        descripcion: 'Para administradores de la carrera de industrial'
+        permiso: 'Crear banners',
+        descripcion: 'El usuario tendra la capacidad de crear banners'
       },
       {
         idpermiso: 6,
-        permiso: 'administracion',
-        descripcion: 'Para administradores de la carrera de administración'
+        permiso: 'Editar Banners',
+        descripcion: 'El usuario tendra la capacidad de editar banners'
       },
       {
         idpermiso: 7,
-        permiso: 'civil',
-        descripcion: 'Para administradores de la carrera de civil'
+        permiso: 'Eliminar Banners',
+        descripcion: 'El usuario tendra la capacidad de eliminar banners'
       },
       {
         idpermiso: 8,
-        permiso: 'bioquimica',
-        descripcion: 'Para administradores de la carrera de bioquímica'
+        permiso: 'Crear Blogs',
+        descripcion: 'El usuario tendra la capacidad de crear noticias'
       },
       {
         idpermiso: 9,
-        permiso: 'electromecanica',
-        descripcion: 'Para administradores de la carrera de electromecánica'
+        permiso: 'Publicar blogs',
+        descripcion: 'El usuario tendra la capacidad de publicar blogs'
       },
       {
         idpermiso: 10,
-        permiso: 'Gestor de contenido',
-        descripcion:
-          'Es un usuario que podra tener acceso a los banners, contenido, de noticias etc.'
+        permiso: 'Editar blogs',
+        descripcion: 'El usuario tendra la capacidad de editar blogs'
+      },
+      {
+        idpermiso: 11,
+        permiso: 'Eliminar blogs',
+        descripcion: 'El usuario tendra la capacidad de eliminar blogs'
+      },
+      {
+        idpermiso: 12,
+        permiso: 'Eliminar blogs',
+        descripcion: 'El usuario tendra la capacidad de eliminar blogs'
       }
     ]);
     console.log('Permisos creados correctamente');

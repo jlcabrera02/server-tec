@@ -1,13 +1,18 @@
-import { crearUsuario as cu, login as lg } from '@services/Users.services';
+import {
+  crearUsuario as cu,
+  login as lg,
+  obtenerPermisos as op,
+  obtenerRoles as or,
+  obtenerRolesPermisos as orp
+} from '@services/Users.services';
 import { sing } from '@middlewares/auth';
-import models from '@models/index';
-const { Permisos } = models;
 
 const controller = {
   login: null, //
   crearUsuario: null, //
   obtenerPermisos: null, //
-  asignarPermisos: null
+  asignarPermisos: null,
+  obtenerRoles: null
 };
 
 controller.crearUsuario = async (req, res) => {
@@ -41,11 +46,10 @@ controller.crearUsuario = async (req, res) => {
 
 controller.obtenerPermisos = async (req, res) => {
   try {
-    const response = await Permisos.findAll();
+    const response = await op();
 
     res.status(200).json({ success: true, response });
   } catch (err) {
-
     res.status(400).json({
       success: false,
       response: err,
@@ -54,23 +58,25 @@ controller.obtenerPermisos = async (req, res) => {
   }
 };
 
+controller.obtenerRoles = async (req, res) => {
+  try {
+    const response = await orp();
+
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    console.log(err);
+
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al obtener roles'
+    });
+  }
+};
+
 controller.asignarPermisos = async (req, res) => {
   try {
-    const usuario = req.usuario;
-    const { idPermiso, username } = req.body;
-
-    const isAdmin = usuario.permisos.some(
-      (permiso: any) => permiso.idpermiso === 1
-    );
-
-    if (!isAdmin)
-      throw {
-        code: 403,
-        msg: 'Recurso no autorizado para el usuario',
-        success: false
-      };
-
-    const response = await Permisos.findAll();
+    const response = await orp();
 
     res.status(200).json({ success: true, response });
   } catch (err) {

@@ -35,6 +35,10 @@ Categorias.hasMany(Subcategorias, { foreignKey: 'idcategoria' });
 
 Roles.belongsToMany(Permisos, { through: RolesAndPermisos });
 Permisos.belongsToMany(Roles, { through: RolesAndPermisos });
+Roles.hasMany(RolesAndPermisos, { as: 'permisos_permitidos' });
+RolesAndPermisos.belongsTo(Roles);
+Permisos.hasMany(RolesAndPermisos);
+RolesAndPermisos.belongsTo(Permisos);
 
 WhiteSubMenu.belongsTo(WhiteMenu, { foreignKey: 'idmenu' });
 WhiteMenu.hasMany(WhiteSubMenu, { foreignKey: 'idmenu' });
