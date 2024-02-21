@@ -52,17 +52,46 @@ export const crearPermisos = async () => {
       {
         idpermiso: 10,
         permiso: 'Editar blogs',
-        descripcion: 'El usuario tendra la capacidad de editar blogs'
+        descripcion: 'El usuario tendra la capacidad de editar blogs.'
       },
       {
         idpermiso: 11,
         permiso: 'Eliminar blogs',
-        descripcion: 'El usuario tendra la capacidad de eliminar blogs'
+        descripcion: 'El usuario tendra la capacidad de eliminar blogs.'
       },
       {
-        idpermiso: 12,
-        permiso: 'Eliminar blogs',
-        descripcion: 'El usuario tendra la capacidad de eliminar blogs'
+        idpermiso: 13,
+        permiso: 'Crear convocatorias',
+        descripcion: 'El usuario tendra la capacidad de crear convocatorias.'
+      },
+      {
+        idpermiso: 14,
+        permiso: 'Editar convocatorias',
+        descripcion:
+          'El usuario tendra la capacidad de editar las convocatorias y añadir links.'
+      },
+      {
+        idpermiso: 15,
+        permiso: 'Eliminar  convocatorias',
+        descripcion: 'El usuario tendra la capacidad de eliminar convocatorias.'
+      },
+      {
+        idpermiso: 16,
+        permiso: 'Administrar etiquetas',
+        descripcion:
+          'El usuario tendra la capacidad de poder manipular etiquetas.'
+      },
+      {
+        idpermiso: 17,
+        permiso: 'Administrar menu azul',
+        descripcion:
+          'El usuario tendra la capacidad de poder manipular el menu con fondo de color azul.'
+      },
+      {
+        idpermiso: 18,
+        permiso: 'Administrar menu blanco',
+        descripcion:
+          'El usuario tendra la capacidad de poder manipular el menu con fondo de color bllanco ubicado en la parte superior de la página.'
       }
     ]);
     console.log('Permisos creados correctamente');
