@@ -1,5 +1,6 @@
 import Jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
+import { RolesAndPermisos } from '@models/Roles.models';
 config();
 
 export const verifyAdmin = async (req, res, next) => {
@@ -16,7 +17,11 @@ export const verifyAdmin = async (req, res, next) => {
     });
 
     if (userAuth) {
+      const permisos = await RolesAndPermisos.findAll({
+        where: { roleRol: userAuth.rol }
+      });
       req.usuario = userAuth;
+      req.permisos = permisos.map((el) => el.dataValues.permisoIdpermiso);
       next();
     } else {
       res.status(403).json({ ok: false, msg: 'No autorizado' });

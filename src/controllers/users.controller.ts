@@ -24,13 +24,9 @@ const controller = {
 
 controller.crearUsuario = async (req, res) => {
   try {
-    const response = await cu({ ...req.body, rol: 'administrador' });
+    const permisos = req.permisos;
 
-    const usuario = req.usuario;
-
-    const isAdmin = usuario.permisos.some(
-      (permiso: any) => permiso.idpermiso === 1
-    );
+    const isAdmin = permisos.some((el: number) => el === 4);
 
     if (!isAdmin)
       throw {
@@ -39,6 +35,7 @@ controller.crearUsuario = async (req, res) => {
         success: false
       };
 
+    const response = await cu({ ...req.body });
     res.status(200).json({ success: true, response });
   } catch (err) {
     console.log(err);
@@ -154,8 +151,6 @@ controller.login = async (req, res) => {
       .status(200)
       .json({ success: true, response: { token, ...response.dataValues } });
   } catch (err) {
-    console.log(err);
-
     res.status(400).json({
       success: false,
       response: err,
