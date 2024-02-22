@@ -6,7 +6,9 @@ import {
   asociarRolesPermisos as arp,
   crearRol as cr,
   editarRol as er,
-  eliminarRol as delr
+  eliminarRol as delr,
+  obtenerUsuarios as obu,
+  cambiarRolUsuarios as changeRU
 } from '@services/Users.services';
 import { sing } from '@middlewares/auth';
 
@@ -19,6 +21,8 @@ const controller = {
   crearRol: null,
   editarRol: null,
   eliminarRol: null,
+  obtenerUsuarios: null,
+  cambiarRolUsuario: null,
   obtenerRoles: null
 };
 
@@ -26,7 +30,7 @@ controller.crearUsuario = async (req, res) => {
   try {
     const permisos = req.permisos;
 
-    const isAdmin = permisos.some((el: number) => el === 4);
+    const isAdmin = permisos.some((el: number) => el === 1);
 
     if (!isAdmin)
       throw {
@@ -129,6 +133,15 @@ controller.eliminarRol = async (req, res) => {
 
 controller.asociarPermisosRoles = async (req, res) => {
   try {
+    const isAdmin = req.permisos.some((el: number) => el === 1);
+
+    if (!isAdmin)
+      throw {
+        code: 403,
+        msg: 'Recurso no autorizado para usuario',
+        success: false
+      };
+
     const { rol, permisos } = req.body;
     const response = await arp({ permisos, rol });
 
@@ -155,6 +168,57 @@ controller.login = async (req, res) => {
       success: false,
       response: err,
       msg: 'Error contraseña o usuario incorrectos'
+    });
+  }
+};
+
+controller.obtenerUsuarios = async (req, res) => {
+  try {
+    const permisos = req.permisos;
+
+    const isAdmin = permisos.some((el: number) => el === 1);
+
+    if (!isAdmin)
+      throw {
+        code: 403,
+        msg: 'Recurso no autorizado para usuario',
+        success: false
+      };
+
+    const response = await obu();
+
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al obtener usuarios'
+    });
+  }
+};
+
+controller.cambiarRolUsuario = async (req, res) => {
+  try {
+    const permisos = req.permisos;
+
+    const isAdmin = permisos.some((el: number) => el === 1);
+
+    if (!isAdmin)
+      throw {
+        code: 403,
+        msg: 'Recurso no autorizado para usuario',
+        success: false
+      };
+
+    const { rol, usuario } = req.body;
+    const response = await changeRU(rol, usuario);
+
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      msg: 'Error al editar rol'
     });
   }
 };

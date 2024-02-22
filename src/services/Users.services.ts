@@ -155,3 +155,23 @@ export const asociarRolesPermisos = async ({ permisos, rol }: permisos) => {
     throw err;
   }
 };
+
+export const obtenerUsuarios = async () => {
+  try {
+    const response = await Users.findAll({
+      attributes: { exclude: ['password'] }
+    });
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const cambiarRolUsuarios = async (rol: string, usuario: string) => {
+  try {
+    const response = await Users.update({ rol }, { where: { usuario } });
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};
