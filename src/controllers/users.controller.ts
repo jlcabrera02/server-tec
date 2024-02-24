@@ -158,11 +158,16 @@ controller.asociarPermisosRoles = async (req, res) => {
 controller.login = async (req, res) => {
   try {
     const response = await lg(req.body);
-    const token = await sing(response.dataValues);
+    const token = await sing(response.login.dataValues);
 
-    res
-      .status(200)
-      .json({ success: true, response: { token, ...response.dataValues } });
+    res.status(200).json({
+      success: true,
+      response: {
+        token,
+        ...response.login.dataValues,
+        permisos: response.permisos
+      }
+    });
   } catch (err) {
     res.status(400).json({
       success: false,

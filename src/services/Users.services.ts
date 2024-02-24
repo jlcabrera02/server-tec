@@ -25,17 +25,22 @@ export const login = async (body: cuerpoLogin) => {
       usuario: body.usuario
     };
 
-    const login = await Users.findOne({ where: filters });
+    const login = await Users.findOne({
+      where: filters
+    });
+
+    const permisos = await RolesAndPermisos.findAll({
+      include: [{ model: Permisos }],
+      where: { roleRol: login.dataValues.rol }
+    });
 
     const authenticate = await login.authenticate(body.password);
     if (!authenticate) throw { msg: 'Error contraseña incorrecta' };
 
     delete login.dataValues.password;
 
-    return login;
+    return { login, permisos };
   } catch (err) {
-    console.log(err);
-
     throw err;
   }
 };
