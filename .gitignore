@@ -3,3 +3,5 @@ node_modules
 # Ignoro las imagenes
 src/public/media/imagenes
 build
+#ignoro el env para evita conflictos posteriores
+.env 
