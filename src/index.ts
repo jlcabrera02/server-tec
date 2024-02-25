@@ -6,7 +6,8 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import { config } from 'dotenv';
 import indexRoute from '@routes/index.route';
-
+//import { createTables } from '@models/index';
+//createTables();
 config();
 
 const app = express();
